@@ -1,3 +1,4 @@
+
 /**
 =========================================================
 * Material Dashboard 2 React - v2.1.0
@@ -12,6 +13,7 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
+import { useState } from 'react';
 
 // react-router-dom components
 import { Link } from "react-router-dom";
@@ -33,6 +35,30 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 
 function Cover() {
+  const [formData, setFormData] = useState({ username: "", email: "", password: "" });
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const response = await fetch("http://localhost:8000/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: formData.username, email: formData.email, password: formData.password }),
+    });
+    if (response.ok) {
+      // Signup successful, redirect to login page
+      window.location.href = "/authentication/sign-in";
+    } else {
+      // Signup failed, display error message
+      const errorData = await response.json();
+      setError(errorData.detail);
+    }
+  };
   return (
     <CoverLayout image={bgImage}>
       <Card sx={{ position: "center", marginTop: 10 }}>
@@ -55,15 +81,15 @@ function Cover() {
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form">
+          <MDBox component="form" role="form" onSubmit={handleSubmit}>
             <MDBox mb={2}>
-              <MDInput type="text" label="Name" variant="standard" fullWidth />
+              <MDInput type="text" name="username" label="Username" variant="standard" fullWidth value={formData.username}  onChange={handleInputChange} />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" variant="standard" fullWidth />
+              <MDInput type="email" name="email" label="Email" variant="standard" fullWidth  value={formData.email} onChange={handleInputChange}/>
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" variant="standard" fullWidth />
+              <MDInput type="password" name="password" label="Password" variant="standard"  fullWidth  value={formData.password} onChange={handleInputChange}/>
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Checkbox />
@@ -75,6 +101,7 @@ function Cover() {
               >
                 &nbsp;&nbsp;I agree the&nbsp;
               </MDTypography>
+              
               <MDTypography
                 component="a"
                 href="#"
@@ -86,11 +113,17 @@ function Cover() {
                 Terms and Conditions
               </MDTypography>
             </MDBox>
+            {error && (
+            <MDBox mt={2} variant="outlined"  color="error" p={1}>
+             <MDTypography variant="body2">{error}</MDTypography>
+             </MDBox>
+              )}
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
-                sign in
+              <MDButton variant="gradient" color="info" fullWidth onClick={handleSubmit}>
+                sign up
               </MDButton>
             </MDBox>
+           
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
                 Already have an account?{" "}

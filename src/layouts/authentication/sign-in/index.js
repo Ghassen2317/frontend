@@ -14,6 +14,7 @@ Coded by www.creative-tim.com
 */
 
 import { useState } from "react";
+import axios from "axios";
 
 // react-router-dom components
 import { Link } from "react-router-dom";
@@ -41,11 +42,33 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
+
 function Basic() {
+  const [usernames, setUsername] = useState('');
+  const [passwords, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
+  const handleSignIn = () => {
+   axios.post('http://localhost:8000/login', 
+  `username=${usernames}&password=${passwords}`, 
+  {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  }
+)
+    .then((response) => {
+      console.log(response.data);
+      window.location.href = "ConfirmMe/frontend/src/App.js";
+      // save access token to local storage and navigate to protected page
+    })
+    .catch((error) => {
+      alert("Login failed. Please check your username and password.");
+      console.log(error);
+    });
+  };
   return (
     <BasicLayout image={bgImage}>
       <Card sx={{ position: "center", marginTop: 10 }}>
@@ -84,10 +107,10 @@ function Basic() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" fullWidth />
+              <MDInput type="txt" label="Username" fullWidth value={usernames} onChange={event => setUsername(event.target.value)} />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" fullWidth />
+              <MDInput type="password" label="Password" fullWidth value={passwords} onChange={event => setPassword(event.target.value)} />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -102,7 +125,7 @@ function Basic() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
+              <MDButton onClick={handleSignIn} variant="gradient" color="info" fullWidth>
                 sign in
               </MDButton>
             </MDBox>

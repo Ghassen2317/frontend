@@ -17,6 +17,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "App";
+import 'primereact/resources/themes/lara-light-indigo/theme.css';   // theme
+import 'primereact/resources/primereact.css';                       // core css
+import 'primeicons/primeicons.css';                                 // icons
+import 'primeflex/primeflex.css';                                   // css utility
+import './layouts/tables/data/Upload/flags.css';
+import  './layouts/tables/data/Upload/index.css';
 
 // Material Dashboard 2 React Context Provider
 import { MaterialUIControllerProvider } from "context";

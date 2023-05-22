@@ -29,10 +29,14 @@ import DataTable from "examples/Tables/DataTable";
 
 // Data
 import authorsTableData from "layouts/tables/data/authorsTableData";
+import confirmosList from "layouts/tables/data/confirmosList";
 import projectsTableData from "layouts/tables/data/projectsTableData";
+import UploadFiles from "./data/Upload/uploadFiles";
+import PDFList from "./data/Upload/pdfList";
 
 function Tables() {
   const { columns, rows } = authorsTableData();
+  const { columns: cColumns, rows: cRows } = confirmosList();
   const { columns: pColumns, rows: pRows } = projectsTableData();
 
   return (
@@ -55,6 +59,45 @@ function Tables() {
                 <MDTypography variant="h6" color="white">
                   Upload Files
                 </MDTypography>
+              </MDBox>
+              <MDBox
+                color="black"
+                bgColor="white"
+                variant="gradient"
+                borderRadius="lg"
+                shadow="lg"
+                opacity={1}
+                p={2}
+              >
+                <UploadFiles />
+                <PDFList />
+              </MDBox>
+            </Card>
+          </Grid>
+          <Grid item xs={12}>
+            <Card>
+              <MDBox
+                mx={2}
+                mt={-3}
+                py={3}
+                px={2}
+                variant="gradient"
+                bgColor="info"
+                borderRadius="lg"
+                coloredShadow="info"
+              >
+                <MDTypography variant="h6" color="white">
+                  List Of Confirmos
+                </MDTypography>
+              </MDBox>
+              <MDBox pt={3}>
+                <DataTable
+                  table={{ columns: cColumns, rows: cRows }}
+                  isSorted={false}
+                  entriesPerPage={false}
+                  showTotalEntries={false}
+                  noEndBorder
+                />
               </MDBox>
             </Card>
           </Grid>
